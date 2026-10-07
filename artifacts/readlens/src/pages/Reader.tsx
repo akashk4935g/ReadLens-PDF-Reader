@@ -48,7 +48,9 @@ export default function Reader() {
   useEffect(()=>{const update=()=>setWidth(Math.min(850,Math.max(300,window.innerWidth-420))); update(); window.addEventListener('resize',update); return()=>window.removeEventListener('resize',update);},[]);
   useEffect(()=>{if(!doc)return; const t=window.setTimeout(()=>{saveDocument({...doc,currentPage:page,lastOpenedAt:Date.now(),updatedAt:Date.now()}).then(refreshLibrary).catch(()=>setError('Reading position could not be saved. Check available storage.'));},250); return()=>clearTimeout(t);},[page,doc]);
   const pageNotes = useMemo(()=>annotations.filter(a=>a.pageNumber===page),[annotations,page]);
-  const pdfFile = useMemo(()=>doc ? {data:new Uint8Array(doc.pdfBytes)} : null,[doc]);
+  // PDF.js transfers this buffer to its worker; pass a copy so doc.pdfBytes
+  // remains cloneable when saving reading progress back to IndexedDB.
+  const pdfFile = useMemo(()=>doc ? {data:new Uint8Array(doc.pdfBytes.slice(0))} : null,[doc]);
   const onSelect = () => {
     const text = window.getSelection()?.toString().trim() || '';
     if (text) { setSelected(text); setShowTools(true); setComposing(false); }

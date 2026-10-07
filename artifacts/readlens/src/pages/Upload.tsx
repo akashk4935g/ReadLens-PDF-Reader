@@ -26,7 +26,9 @@ export default function Upload() {
       setProgress('Reading your PDF…');
       const bytes = await file.arrayBuffer();
       if (new TextDecoder().decode(bytes.slice(0,5)) !== '%PDF-') throw new Error('This file does not have a valid PDF header. It may be damaged or renamed.');
-      const task = pdfjs.getDocument({ data: new Uint8Array(bytes) });
+      // PDF.js transfers its input buffer to the worker. Keep the original
+      // ArrayBuffer intact for the subsequent IndexedDB save.
+      const task = pdfjs.getDocument({ data: new Uint8Array(bytes.slice(0)) });
       const pdf = await task.promise;
       if (!pdf.numPages) throw new Error('This PDF has no readable pages.');
       const pageTexts: string[] = [];
