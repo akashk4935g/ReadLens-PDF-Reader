@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useRoute } from 'wouter';
-import { Document as PdfDocument, Page as PdfPage, pdfjs } from 'react-pdf';
+import { Document as PdfDocument, Page as PdfPage } from 'react-pdf';
 import 'react-pdf/dist/Page/TextLayer.css';
+import '../lib/pdfjs';
 import { ArrowLeft, ChevronLeft, ChevronRight, Copy, Highlighter, MessageSquare, Minus, Plus, Sparkles, X } from 'lucide-react';
 import { getAnnotations, getDocument, refreshLibrary, removeAnnotation, saveAnnotation, saveDocument } from '../lib/library';
 import type { Annotation, AnnotationType, HighlightRect, ReadDocument } from '../lib/library';
-pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
 const kinds: {key:AnnotationType;label:string;dot:string}[] = [
   {key:'normal',label:'Highlight',dot:'bg-amber-300'},{key:'important',label:'Important',dot:'bg-rose-400'},{key:'definition',label:'Definition',dot:'bg-sky-400'},{key:'question',label:'Question',dot:'bg-violet-400'},{key:'confusing',label:'Confusing',dot:'bg-orange-400'},{key:'idea',label:'Idea',dot:'bg-emerald-400'}
 ];

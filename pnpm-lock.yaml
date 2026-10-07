@@ -406,6 +406,9 @@ importers:
 
   artifacts/readlens:
     dependencies:
+      pdfjs-dist:
+        specifier: 6.3.289
+        version: 6.3.289
       react-pdf:
         specifier: ^11.0.0
         version: 11.0.0(@types/react@19.3.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)

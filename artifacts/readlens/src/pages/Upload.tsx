@@ -2,10 +2,9 @@ import { useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent } from 'react';
 import { useLocation } from 'wouter';
 import { ArrowLeft, Check, FileUp, LoaderCircle, ShieldCheck, X } from 'lucide-react';
-import { pdfjs } from 'react-pdf';
 import { getDocuments, refreshLibrary, saveDocument } from '../lib/library';
+import { pdfjs } from '../lib/pdfjs';
 import type { ReadDocument } from '../lib/library';
-pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
 
 export default function Upload() {
   const [,setLocation] = useLocation();
