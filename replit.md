@@ -1,44 +1,50 @@
-# [Project name]
+# ReadLens
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A local-first PDF reader for reading, searching, highlighting, and saving notes without uploading documents.
 
 ## Run & Operate
 
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/readlens run typecheck` — typecheck the ReadLens app
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- ReadLens does not require a database or secrets for its local-first reading features.
 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- Web: React + Vite + TypeScript, Tailwind CSS, Wouter
+- PDF: react-pdf / PDF.js
+- Local persistence: browser IndexedDB
+- Shared API: Express 5; PostgreSQL + Drizzle are available to future server-backed features
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/readlens/src/pages/` — home, upload, PDF reader, notes, search, and settings
+- `artifacts/readlens/src/lib/library.ts` — IndexedDB persistence and document/annotation types
+- `artifacts/readlens/src/index.css` — visual theme and PDF reader styling
+- `artifacts/api-server/` and `lib/api-spec/` — shared server and API contract, not used for local ReadLens storage
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The first release stores PDFs, extracted page text, notes, and reading position in browser IndexedDB; it has no accounts or cloud sync.
+- PDF text indexing and keyword search run in the browser. The original PDF is not modified.
+- AI actions remain unavailable unless a provider is configured; reading and annotations do not depend on AI.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Import PDFs, resume reading, navigate and zoom pages, select and copy text, save categorized highlights/comments, search across the local library, and open notes at their source page.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+No additional standing preferences recorded.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- Browser/site-data clearing can erase the local library; there is no cross-device backup or sync in this release.
+- AI help is not active in the current build.
 
 ## Pointers
 
