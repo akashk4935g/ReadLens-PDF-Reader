@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: gemini
+    description: On-demand help for selected passages
 paths:
   /healthz:
     get:
@@ -24,6 +26,61 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /gemini/assist:
+    post:
+      operationId: geminiAssist
+      tags: [gemini]
+      summary: Help with a selected PDF passage
+      description: Sends only the selected passage and short nearby context to Gemini.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GeminiAssistInput"
+      responses:
+        "200":
+          description: Gemini answer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeminiAssistResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeminiAssistError"
+        "403":
+          description: Request origin is not allowed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeminiAssistError"
+        "429":
+          description: Request rate limit reached
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeminiAssistError"
+        "502":
+          description: Gemini API request failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeminiAssistError"
+        "503":
+          description: Gemini is not configured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeminiAssistError"
+        "504":
+          description: Gemini request timed out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeminiAssistError"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +90,39 @@ components:
           type: string
       required:
         - status
+    GeminiAssistInput:
+      type: object
+      additionalProperties: false
+      properties:
+        action:
+          type: string
+          enum: [explain, simplify, translate]
+        selectedText:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        context:
+          type: string
+          maxLength: 1000
+        targetLanguage:
+          type: string
+          minLength: 1
+          maxLength: 60
+      required: [action, selectedText, context]
+    GeminiAssistResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        answer:
+          type: string
+          minLength: 1
+          maxLength: 12000
+      required: [answer]
+    GeminiAssistError:
+      type: object
+      additionalProperties: false
+      properties:
+        error:
+          type: string
+      required: [error]
 
