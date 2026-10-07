@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "ReadLens"
+description = "A focused PDF reader for students, researchers, and professionals. Read documents, select text for contextual help, save highlights and notes, and resume where you left off."
+version = "1.0.0"
+id = "artifacts/readlens"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21451
+
+[services.development]
+run = "pnpm --filter @workspace/readlens run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/readlens", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/readlens/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21451"
+BASE_PATH = "/"
