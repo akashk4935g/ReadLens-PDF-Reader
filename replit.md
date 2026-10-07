@@ -45,6 +45,7 @@ No additional standing preferences recorded.
 
 - Browser/site-data clearing can erase the local library; there is no cross-device backup or sync in this release.
 - AI help is not active in the current build.
+- React-PDF 11 enables Suspense by default. Reader sets `suspense={false}` on both `Document` and `Page` because its loading UI is not inside a React Suspense boundary.
 
 ## Pointers
 
